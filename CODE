@@ -1,1 +1,110 @@
+import time
+import pandas as pd
+import matplotlib.pyplot as plt
+import random
+
+class TrainTicket:
+    def __init__(self, name, departure_time, destination, tickets_sold, category, day):
+        self.name = name
+        self.departure_time = departure_time
+        self.destination = destination
+        self.tickets_sold = tickets_sold
+        self.category = category
+        self.day = day
+
+    def __repr__(self):
+        return (f"{self.name} | {self.departure_time} | {self.destination} | "
+                f"Tiket Terjual: {self.tickets_sold} | Tipe Kereta: {self.category} | Hari: {self.day}")
+
+# Iterative Insertion Sort
+def insertion_sort_iterative(tickets):
+    for i in range(1, len(tickets)):
+        key = tickets[i]
+        j = i - 1
+        while j >= 0 and key.tickets_sold > tickets[j].tickets_sold:
+            tickets[j + 1] = tickets[j]
+            j -= 1
+        tickets[j + 1] = key
+    return tickets
+
+# Recursive Insertion Sort
+def insertion_sort_recursive(tickets, n):
+    if n <= 1:
+        return
+    insertion_sort_recursive(tickets, n - 1)
+    key = tickets[n - 1]
+    j = n - 2
+    while j >= 0 and key.tickets_sold > tickets[j].tickets_sold:
+        tickets[j + 1] = tickets[j]
+        j -= 1
+    tickets[j + 1] = key
+
+# Function to generate random train ticket data
+def generate_random_tickets(size):
+    categories = ["Ekonomi", "Bisnis", "Eksekutif"]
+    days = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"]
+    tickets = []
+    for _ in range(size):
+        name = "Kereta Lodaya"
+        departure_time = f"{random.randint(0, 23)}:{random.randint(0, 59):02d}"
+        destination = random.choice(["Bandung", "Salatiga", "Jakarta", "Semarang", "Blitar", "Yogyakarta", "Tasikmalaya", "Surabaya"])
+        category = random.choice(categories)
+        day = random.choice(days)
+        tickets_sold = random.randint(50, 5000)  # Simulate random ticket sales
+        tickets.append(TrainTicket(name, departure_time, destination, tickets_sold, category, day))
+    return tickets
+
+# Function for sorting and categorizing tickets (recursive)
+def sort_and_categorize_recursive(tickets):
+    insertion_sort_recursive(tickets, len(tickets))
+    return tickets  # Returning sorted tickets
+
+# Function for sorting and categorizing tickets (iterative)
+def sort_and_categorize_iterative(tickets):
+    return insertion_sort_iterative(tickets)
+
+def main():
+    input_sizes = range(1, 1000, 50)  # From 1 to 1000 with step 50
+    runtimes_recursive = []
+    runtimes_iterative = []
+
+    for size in input_sizes:
+        # Generate tickets only once
+        tickets = generate_random_tickets(size)
+
+        # Copy list for recursive sorting
+        tickets_recursive = tickets.copy()
+        start_time = time.time()
+        sorted_recursive = sort_and_categorize_recursive(tickets_recursive)
+        runtimes_recursive.append(time.time() - start_time)
+
+        # Copy list for iterative sorting
+        tickets_iterative = tickets.copy()
+        start_time = time.time()
+        sorted_iterative = sort_and_categorize_iterative(tickets_iterative)
+        runtimes_iterative.append(time.time() - start_time)
+
+    # Create DataFrame for comparison table
+    df = pd.DataFrame({
+        'Input Size': input_sizes,
+        'Rekursif (Insertion Sort)': runtimes_recursive,
+        'Iteratif (Insertion Sort)': runtimes_iterative
+    })
+
+    # Display comparison table
+    print(df)
+
+    # Plot comparison of runtimes
+    plt.figure(figsize=(10, 6))
+    plt.plot(input_sizes, runtimes_recursive, marker='o', linestyle='-', color='b', label="Rekursif (Insertion Sort)")
+    plt.plot(input_sizes, runtimes_iterative, marker='o', linestyle='-', color='r', label="Iteratif (Insertion Sort)")
+    plt.title("Perbandingan Waktu Eksekusi: Rekursif vs Iteratif")
+    plt.xlabel("Ukuran Input (Jumlah Tiket Kereta)")
+    plt.ylabel("Waktu Eksekusi (detik)")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+if __name__ == "__main__":
+    main()
 
