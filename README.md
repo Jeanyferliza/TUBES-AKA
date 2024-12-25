@@ -1,9 +1,10 @@
-TUGAS BESAR AKA
+#TUGAS BESAR ANALISIS KOMPLEKSITAS ALGORITMA
 
 Anggota Kelompok:
 1. Velisia Nihan Rahmawati (103012300203)
-   
 2. Jeany Ferliza Nayla (103012300357)
+
+IF-47-08
 
 Deskripsi Tugas Besar
 
